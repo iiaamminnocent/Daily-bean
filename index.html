@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DailyBean</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #fdfbf7; --bg-panel: #ffffff; --text-main: #3e2723; --text-muted: #8d6e63;
+            --border: #e7e0d5; --accent: #6f4e37; --accent-hover: #5d4037; --shadow: 0 8px 30px rgba(111, 78, 55, 0.08);
+            --mood-5: linear-gradient(135deg, #FFB300, #F57C00); --mood-4: linear-gradient(135deg, #FF8A65, #D84315);
+            --mood-3: linear-gradient(135deg, #A1887F, #6D4C41); --mood-2: linear-gradient(135deg, #90A4AE, #546E7A);
+            --mood-1: linear-gradient(135deg, #455A64, #263238);
+            --font-ui: 'Nunito', sans-serif; --font-heading: 'Playfair Display', serif; --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        [data-theme="matcha"] {
+            --bg-base: #F1F8E9; --bg-panel: #FFFFFF; --text-main: #2E3B32; --text-muted: #689F38; --border: #DCEDC8; --accent: #558B2F; --accent-hover: #33691E;
+            --mood-5: linear-gradient(135deg, #AEEA00, #64DD17); --mood-4: linear-gradient(135deg, #69F0AE, #00E676); --mood-3: linear-gradient(135deg, #81C784, #388E3C); --mood-2: linear-gradient(135deg, #BCAAA4, #795548); --mood-1: linear-gradient(135deg, #5D4037, #3E2723);
+        }
+
+        [data-theme="midnight"] {
+            --bg-base: #121212; --bg-panel: #1E1E1E; --text-main: #E0E0E0; --text-muted: #9E9E9E; --border: #333333; --accent: #BB86FC; --accent-hover: #9965f4;
+            --mood-5: linear-gradient(135deg, #00E5FF, #2979FF); --mood-4: linear-gradient(135deg, #B388FF, #651FFF); --mood-3: linear-gradient(135deg, #9FA8DA, #3F51B5); --mood-2: linear-gradient(135deg, #78909C, #455A64); --mood-1: linear-gradient(135deg, #263238, #000000);
+        }
+
+        [data-theme="ocean"] {
+            --bg-base: #E0F7FA; --bg-panel: #FFFFFF; --text-main: #004D40; --text-muted: #00838F; --border: #B2EBF2; --accent: #006064; --accent-hover: #00363A;
+            --mood-5: linear-gradient(135deg, #18FFFF, #00B8D4); --mood-4: linear-gradient(135deg, #4FC3F7, #0288D1); --mood-3: linear-gradient(135deg, #81D4FA, #0277BD); --mood-2: linear-gradient(135deg, #90CAF9, #1565C0); --mood-1: linear-gradient(135deg, #1A237E, #0D47A1);
+        }
+
+        [data-theme="sunset"] {
+            --bg-base: #FFF3E0; --bg-panel: #FFFFFF; --text-main: #BF360C; --text-muted: #D84315; --border: #FFE0B2; --accent: #E64A19; --accent-hover: #D84315;
+            --mood-5: linear-gradient(135deg, #FFEA00, #FF9100); --mood-4: linear-gradient(135deg, #FF6D00, #DD2C00); --mood-3: linear-gradient(135deg, #FF5252, #C62828); --mood-2: linear-gradient(135deg, #AB47BC, #6A1B9A); --mood-1: linear-gradient(135deg, #311B92, #1A237E);
+        }
+
+        [data-theme="lavender"] {
+            --bg-base: #F3E5F5; --bg-panel: #FFFFFF; --text-main: #4A148C; --text-muted: #7B1FA2; --border: #E1BEE7; --accent: #8E24AA; --accent-hover: #6A1B9A;
+            --mood-5: linear-gradient(135deg, #FF80AB, #F50057); --mood-4: linear-gradient(135deg, #EA80FC, #AA00FF); --mood-3: linear-gradient(135deg, #B388FF, #6200EA); --mood-2: linear-gradient(135deg, #8C9EFF, #304FFE); --mood-1: linear-gradient(135deg, #283593, #1A237E);
+        }
+
+        /* NEW THEME 7: Cherry Blossom */
+        [data-theme="cherry"] {
+            --bg-base: #FFF0F5; --bg-panel: #FFFFFF; --text-main: #880E4F; --text-muted: #AD1457; --border: #F8BBD0; --accent: #D81B60; --accent-hover: #C2185B;
+            --mood-5: linear-gradient(135deg, #FF4081, #F50057); --mood-4: linear-gradient(135deg, #FF80AB, #F06292); --mood-3: linear-gradient(135deg, #F48FB1, #E91E63); --mood-2: linear-gradient(135deg, #CE93D8, #9C27B0); --mood-1: linear-gradient(135deg, #6A1B9A, #4A148C);
+        }
+
+        /* NEW THEME 8: Forest Retreat */
+        [data-theme="forest"] {
+            --bg-base: #EFEBE9; --bg-panel: #FFFFFF; --text-main: #1B5E20; --text-muted: #33691E; --border: #D7CCC8; --accent: #2E7D32; --accent-hover: #1B5E20;
+            --mood-5: linear-gradient(135deg, #69F0AE, #00C853); --mood-4: linear-gradient(135deg, #81C784, #43A047); --mood-3: linear-gradient(135deg, #A1887F, #6D4C41); --mood-2: linear-gradient(135deg, #795548, #4E342E); --mood-1: linear-gradient(135deg, #3E2723, #212121);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-ui); background: var(--bg-base); color: var(--text-main); transition: var(--transition); overflow-x: hidden; }
+        .app-container { max-width: 1200px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: var(--bg-panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.6rem; font-family: var(--font-heading); font-weight: 800; color: var(--accent); }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-btn { font-size: 1rem; font-weight: 700; color: var(--text-muted); padding: 8px 18px; border-radius: 20px; cursor: pointer; border: none; background: none; transition: var(--transition); }
+        .nav-btn:hover, .nav-btn.active { color: var(--bg-panel); background: var(--accent); }
+
+        .view { display: none; padding: 40px; }
+        .view.active { display: block; }
+        .btn-primary { background: var(--accent); color: var(--bg-panel); padding: 15px 40px; border-radius: 30px; font-size: 1.1rem; font-weight: 700; cursor: pointer; border: none; box-shadow: var(--shadow); transition: var(--transition); }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+        .editor-container { max-width: 720px; margin: 0 auto; background: var(--bg-panel); padding: 40px; border-radius: 24px; box-shadow: var(--shadow); }
+        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .custom-date-picker { position: relative; display: inline-block; cursor: pointer; }
+        .custom-date-picker span { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 600; color: var(--accent); border-bottom: 2px dashed var(--accent); padding-bottom: 2px; }
+        .custom-date-picker input[type="date"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+        .mood-selector { display: flex; gap: 15px; margin-bottom: 30px; justify-content: center; }
+        .mood-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 75px; height: 85px; border-radius: 18px; border: 2px solid var(--border); background: var(--bg-base); cursor: pointer; transition: var(--transition); color: var(--text-muted); }
+        .mood-btn.active[data-mood="5"] { background: var(--mood-5); color: #fff; border-color: transparent; transform: scale(1.05); }
+        .mood-btn.active[data-mood="4"] { background: var(--mood-4); color: #fff; border-color: transparent; transform: scale(1.05); }
+        .mood-btn.active[data-mood="3"] { background: var(--mood-3); color: #fff; border-color: transparent; transform: scale(1.05); }
+        .mood-btn.active[data-mood="2"] { background: var(--mood-2); color: #fff; border-color: transparent; transform: scale(1.05); }
+        .mood-btn.active[data-mood="1"] { background: var(--mood-1); color: #fff; border-color: transparent; transform: scale(1.05); }
+
+        .mood-emoji { font-size: 2rem; margin-bottom: 5px; }
+        .mood-stars { font-size: 0.65rem; font-weight: 700; }
+
+        textarea { width: 100%; height: 260px; padding: 25px; border-radius: 20px; border: 2px solid var(--border); background: var(--bg-base); color: var(--text-main); font-size: 1.15rem; resize: none; outline: none; line-height: 1.7; font-family: inherit; }
+        textarea:focus { border-color: var(--accent); background: var(--bg-panel); }
+
+        .media-section { margin-top: 25px; padding-top: 25px; border-top: 2px dashed var(--border); }
+        .file-upload-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 15px; background: var(--bg-base); border: 2px solid var(--border); color: var(--text-main); font-weight: 700; cursor: pointer; }
+        #fileInput { display: none; }
+        .media-preview-grid { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
+        .media-wrapper { position: relative; display: inline-block; }
+        .media-item { width: 110px; height: 110px; border-radius: 14px; object-fit: cover; border: 2px solid var(--border); cursor: pointer; transition: transform 0.2s; }
+        .media-item:hover { transform: scale(1.04); }
+        .media-remove { position: absolute; top: -8px; right: -8px; background: #FF5252; color: white; border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .year-nav { font-size: 2.5rem; color: var(--accent); font-family: var(--font-heading); display: flex; align-items: center; gap: 20px; }
+        .year-btn { font-size: 2rem; color: var(--text-muted); background: var(--bg-panel); border-radius: 50%; width: 50px; height: 50px; cursor: pointer; border: none; box-shadow: var(--shadow); }
+        .year-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 35px; }
+        .month-card { background: var(--bg-panel); border-radius: 24px; padding: 25px; box-shadow: var(--shadow); }
+        .month-title { font-family: var(--font-heading); font-size: 1.4rem; margin-bottom: 20px; text-align: center; }
+        .month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .day-label { text-align: center; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; }
+        .day-cell { aspect-ratio: 1; border-radius: 8px; background: var(--bg-base); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
+        .day-cell:hover:not(.future-disabled) { transform: scale(1.2); z-index: 10; border-color: var(--accent); }
+        .day-cell.empty { background: transparent; cursor: default; }
+        .day-cell.future-disabled { opacity: 0.2; cursor: not-allowed; }
+
+        .mood-color-5 { background: var(--mood-5); color: #fff; } .mood-color-4 { background: var(--mood-4); color: #fff; }
+        .mood-color-3 { background: var(--mood-3); color: #fff; } .mood-color-2 { background: var(--mood-2); color: #fff; }
+        .mood-color-1 { background: var(--mood-1); color: #fff; }
+
+        #tooltip { position: absolute; background: var(--bg-panel); color: var(--text-main); padding: 18px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); border: 2px solid var(--border); width: 320px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1000; font-size: 0.95rem; line-height: 1.5; }
+        .tooltip-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 800; color: var(--accent); border-bottom: 2px dashed var(--border); padding-bottom: 6px; }
+        .tooltip-thumbs { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; }
+        .tooltip-thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); }
+
+        #lightbox { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 20px; }
+        #lightbox.active { display: flex; }
+        #lightboxContent { max-width: 90vw; max-height: 90vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .lightbox-close { position: absolute; top: 30px; right: 40px; font-size: 2.5rem; color: #fff; cursor: pointer; }
+
+        .settings-container { max-width: 680px; margin: 0 auto; background: var(--bg-panel); padding: 40px; border-radius: 24px; box-shadow: var(--shadow); }
+        .settings-group { margin-bottom: 35px; padding-bottom: 25px; border-bottom: 1px solid var(--border); }
+        .theme-options { display: flex; flex-wrap: wrap; gap: 10px; }
+        .theme-btn { padding: 12px 18px; border-radius: 15px; border: 2px solid var(--border); background: var(--bg-base); font-weight: 700; cursor: pointer; }
+        .theme-btn.active { border-color: var(--accent); background: var(--accent); color: var(--bg-panel); }
+        .drive-box { background: var(--bg-base); border: 2px dashed var(--border); border-radius: 16px; padding: 20px; margin-top: 15px; word-break: break-all; font-weight:bold; color: var(--accent); }
+
+        #toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text-main); color: var(--bg-panel); padding: 14px 30px; border-radius: 30px; font-weight: 700; opacity: 0; visibility: hidden; transition: all 0.3s; z-index: 2000; }
+        #toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <nav>
+        <div class="logo">DailyBean</div>
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="App.navigate('editor')" id="nav-editor">Today</button>
+            <button class="nav-btn" onclick="App.navigate('calendar')" id="nav-calendar">Calendar</button>
+            <button class="nav-btn" onclick="App.navigate('settings')" id="nav-settings">Settings</button>
+        </div>
+    </nav>
+
+    <div id="editorView" class="view active">
+        <div class="editor-container">
+            <div class="editor-header">
+                <h2>How was your day?</h2>
+                <div class="custom-date-picker">
+                    <span id="prettyDateText">Loading...</span>
+                    <!-- Prevent future dates directly in HTML -->
+                    <input type="date" id="journalDate" onchange="App.onDateChange()">
+                </div>
+            </div>
+
+            <div class="mood-selector">
+                <button class="mood-btn" data-mood="5" onclick="App.setMood(5)"><span class="mood-emoji">🤩</span><span class="mood-stars">★★★★★</span></button>
+                <button class="mood-btn" data-mood="4" onclick="App.setMood(4)"><span class="mood-emoji">😊</span><span class="mood-stars">★★★★☆</span></button>
+                <button class="mood-btn" data-mood="3" onclick="App.setMood(3)"><span class="mood-emoji">☕</span><span class="mood-stars">★★★☆☆</span></button>
+                <button class="mood-btn" data-mood="2" onclick="App.setMood(2)"><span class="mood-emoji">🌧️</span><span class="mood-stars">★★☆☆☆</span></button>
+                <button class="mood-btn" data-mood="1" onclick="App.setMood(1)"><span class="mood-emoji">🥀</span><span class="mood-stars">★☆☆☆☆</span></button>
+            </div>
+
+            <textarea id="journalText" placeholder="Pour your thoughts out here..."></textarea>
+
+            <div class="media-section">
+                <label class="file-upload-btn" for="fileInput">📎 Attach Photos/Videos</label>
+                <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="App.handleFiles(event)">
+                <div class="media-preview-grid" id="mediaPreview"></div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:30px;">
+                <button class="btn-primary" onclick="App.saveEntry()">Save Entry</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="calendarView" class="view">
+        <div class="calendar-header">
+            <h2>Your Year in Review</h2>
+            <div class="year-nav">
+                <button class="year-btn" onclick="App.changeYear(-1)">❮</button>
+                <span id="displayYear">2026</span>
+                <button class="year-btn" onclick="App.changeYear(1)">❯</button>
+            </div>
+        </div>
+        <div class="year-grid" id="yearGrid"></div>
+    </div>
+
+    <div id="settingsView" class="view">
+        <div class="settings-container">
+            <h2>Settings</h2>
+            
+            <div class="settings-group" style="margin-top:25px;">
+                <h3>Active Storage Drive</h3>
+                <p style="color:var(--text-muted); margin-bottom:10px;">Your journals and media are saved physically here.</p>
+                <div class="drive-box" id="currentDrivePath">Checking storage...</div>
+                <button class="btn-primary" style="margin-top:15px; font-size:0.95rem; padding:10px 20px;" onclick="App.changeStorageFolder()">Change Drive & Move Data</button>
+            </div>
+
+            <div class="settings-group">
+                <h3>Backup & Restore</h3>
+                <p style="color:var(--text-muted); margin-bottom:15px;">Use these to move your DailyBean data to a completely different computer.</p>
+                <div style="display:flex; gap:15px;">
+                    <button class="btn-primary" style="flex:1;" onclick="App.exportBackup()">📤 Export Backup</button>
+                    <button class="btn-primary" style="flex:1; background: var(--bg-base); color: var(--text-main); border: 2px solid var(--border);" onclick="App.importBackup()">📥 Import Backup</button>
+                </div>
+            </div>
+
+            <div class="settings-group" style="border:none;">
+                <h3>Theme Templates (8 Options)</h3>
+                <div class="theme-options">
+                    <button class="theme-btn active" data-theme-id="coffee" onclick="App.setTheme('coffee')">Classic Coffee</button>
+                    <button class="theme-btn" data-theme-id="matcha" onclick="App.setTheme('matcha')">Matcha Green</button>
+                    <button class="theme-btn" data-theme-id="midnight" onclick="App.setTheme('midnight')">Midnight Roast</button>
+                    <button class="theme-btn" data-theme-id="ocean" onclick="App.setTheme('ocean')">Ocean Breeze</button>
+                    <button class="theme-btn" data-theme-id="sunset" onclick="App.setTheme('sunset')">Sunset Glow</button>
+                    <button class="theme-btn" data-theme-id="lavender" onclick="App.setTheme('lavender')">Lavender Dream</button>
+                    <button class="theme-btn" data-theme-id="cherry" onclick="App.setTheme('cherry')">Cherry Blossom</button>
+                    <button class="theme-btn" data-theme-id="forest" onclick="App.setTheme('forest')">Forest Retreat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="lightbox" onclick="App.closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <div id="lightboxMediaContainer" onclick="event.stopPropagation()"></div>
+</div>
+
+<div id="tooltip">
+    <div class="tooltip-header"><span id="ttDate"></span><span id="ttMood"></span></div>
+    <div id="ttText"></div>
+    <div class="tooltip-thumbs" id="ttThumbs"></div>
+</div>
+
+<div id="toast">Message</div>
+
+<script>
+const App = {
+    currentDate: null, currentYear: null, activeMood: 3, activeMedia: [], entriesCache: {},
+    MONTHS: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+
+    async init() {
+        const today = new Date();
+        const todayStr = this.formatDate(today);
+        this.currentDate = todayStr;
+        this.currentYear = today.getFullYear();
+        
+        // Prevent future dates in the date picker
+        const dateInput = document.getElementById('journalDate');
+        dateInput.value = this.currentDate;
+        dateInput.max = todayStr; 
+        
+        this.updatePrettyDate();
+
+        const savedTheme = localStorage.getItem('dailyBeanTheme') || 'coffee';
+        this.setTheme(savedTheme);
+
+        if (window.DailyBeanNative) {
+            document.getElementById('currentDrivePath').innerText = await window.DailyBeanNative.getStoragePath();
+            this.loadEditorData();
+        }
+        document.addEventListener('mousemove', this.handleTooltip.bind(this));
+    },
+
+    navigate(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(viewId + 'View').classList.add('active');
+        document.getElementById('nav-' + viewId).classList.add('active');
+
+        if (viewId === 'editor') {
+            document.getElementById('journalDate').value = this.currentDate;
+            this.updatePrettyDate();
+            this.loadEditorData();
+        } else if (viewId === 'calendar') {
+            this.renderCalendar();
+        }
+    },
+
+    showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = msg; t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2800);
+    },
+
+    setTheme(name) {
+        document.documentElement.setAttribute('data-theme', name);
+        localStorage.setItem('dailyBeanTheme', name);
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.themeId === name));
+    },
+
+    formatDate(d) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    },
+
+    onDateChange() {
+        this.currentDate = document.getElementById('journalDate').value;
+        this.updatePrettyDate();
+        this.loadEditorData();
+    },
+
+    updatePrettyDate() {
+        const parts = this.currentDate.split('-');
+        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+        document.getElementById('prettyDateText').innerText = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    },
+
+    setMood(lvl) {
+        this.activeMood = lvl;
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.mood) === lvl));
+    },
+
+    async loadEditorData() {
+        let entry = null;
+        if (window.DailyBeanNative) entry = await window.DailyBeanNative.getEntry(this.currentDate);
+
+        this.activeMedia = [];
+        document.getElementById('mediaPreview').innerHTML = '';
+
+        if (entry) {
+            document.getElementById('journalText').value = entry.text || '';
+            this.setMood(entry.mood || 3);
+            if (entry.media) {
+                this.activeMedia = entry.media;
+                this.activeMedia.forEach(m => this.renderMediaItem(m));
+            }
+        } else {
+            document.getElementById('journalText').value = '';
+            this.setMood(3);
+        }
+    },
+
+    async saveEntry() {
+        const entry = {
+            date: this.currentDate,
+            mood: this.activeMood,
+            text: document.getElementById('journalText').value.trim(),
+            media: this.activeMedia
+        };
+        if (window.DailyBeanNative) {
+            await window.DailyBeanNative.saveEntry(entry);
+            this.showToast("Saved directly to your hard drive!");
+        }
+    },
+
+    async changeStorageFolder() {
+        if (window.DailyBeanNative) {
+            const newPath = await window.DailyBeanNative.selectStorageFolder();
+            if (newPath) {
+                document.getElementById('currentDrivePath').innerText = newPath;
+                this.showToast("Storage moved successfully to new drive!");
+            }
+        }
+    },
+
+    // NEW: Export / Import Button Logics
+    async exportBackup() {
+        if (window.DailyBeanNative) {
+            const backupPath = await window.DailyBeanNative.exportBackup();
+            if (backupPath) this.showToast(`Backup successfully saved to: ${backupPath}`);
+        }
+    },
+
+    async importBackup() {
+        if (window.DailyBeanNative) {
+            const success = await window.DailyBeanNative.importBackup();
+            if (success) {
+                this.showToast("Backup successfully imported!");
+                if (document.getElementById('calendarView').classList.contains('active')) this.renderCalendar();
+                else this.loadEditorData();
+            } else if (success === false) {
+                this.showToast("Error: That folder doesn't contain a valid backup.");
+            }
+        }
+    },
+
+    handleFiles(e) {
+        Array.from(e.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const item = { id: Date.now() + Math.random(), type: file.type.startsWith('video') ? 'video' : 'image', dataUrl: ev.target.result };
+                this.activeMedia.push(item);
+                this.renderMediaItem(item);
+            };
+            reader.readAsDataURL(file);
+        });
+        e.target.value = '';
+    },
+
+    renderMediaItem(item) {
+        const grid = document.getElementById('mediaPreview');
+        const wrap = document.createElement('div');
+        wrap.className = 'media-wrapper';
+        const src = item.src || item.dataUrl;
+
+        let el = document.createElement(item.type === 'video' ? 'video' : 'img');
+        el.src = src; el.className = 'media-item';
+        if(item.type === 'video') el.muted = true;
+        el.onclick = () => this.openLightbox(src, item.type);
+
+        const rm = document.createElement('div');
+        rm.className = 'media-remove'; rm.innerHTML = '&times;';
+        rm.onclick = () => { this.activeMedia = this.activeMedia.filter(m => m.id !== item.id); wrap.remove(); };
+
+        wrap.appendChild(el); wrap.appendChild(rm); grid.appendChild(wrap);
+    },
+
+    openLightbox(src, type) {
+        const container = document.getElementById('lightboxMediaContainer');
+        container.innerHTML = '';
+        const el = document.createElement(type === 'video' ? 'video' : 'img');
+        el.src = src; el.id = 'lightboxContent';
+        if(type === 'video') { el.controls = true; el.autoplay = true; }
+        container.appendChild(el);
+        document.getElementById('lightbox').classList.add('active');
+    },
+    closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.getElementById('lightboxMediaContainer').innerHTML = '';
+    },
+
+    changeYear(delta) { this.currentYear += delta; this.renderCalendar(); },
+
+    async renderCalendar() {
+        document.getElementById('displayYear').innerText = this.currentYear;
+        const grid = document.getElementById('yearGrid');
+        grid.innerHTML = '';
+        
+        const allEntries = window.DailyBeanNative ? await window.DailyBeanNative.getAllEntries() : [];
+        this.entriesCache = {};
+        allEntries.forEach(e => { this.entriesCache[e.date] = e; });
+
+        const todayStr = this.formatDate(new Date());
+
+        for (let m = 0; m < 12; m++) {
+            const card = document.createElement('div'); card.className = 'month-card';
+            card.innerHTML = `<div class="month-title">${this.MONTHS[m]}</div>`;
+            const mGrid = document.createElement('div'); mGrid.className = 'month-grid';
+            ['S','M','T','W','T','F','S'].forEach(d => mGrid.innerHTML += `<div class="day-label">${d}</div>`);
+
+            for (let i = 0; i < new Date(this.currentYear, m, 1).getDay(); i++) mGrid.innerHTML += `<div class="day-cell empty"></div>`;
+            for (let day = 1; day <= new Date(this.currentYear, m + 1, 0).getDate(); day++) {
+                const dateStr = this.formatDate(new Date(this.currentYear, m, day));
+                const cell = document.createElement('div');
+                cell.className = 'day-cell'; cell.innerText = day; cell.dataset.date = dateStr;
+
+                // Disable future dates on the calendar
+                if (dateStr > todayStr) {
+                    cell.classList.add('future-disabled');
+                } else {
+                    if (this.entriesCache[dateStr]) cell.classList.add(`mood-color-${this.entriesCache[dateStr].mood}`);
+                    cell.onclick = () => {
+                        this.currentDate = dateStr; document.getElementById('journalDate').value = dateStr;
+                        this.navigate('editor');
+                    };
+                }
+                
+                mGrid.appendChild(cell);
+            }
+            card.appendChild(mGrid); grid.appendChild(card);
+        }
+    },
+
+    handleTooltip(e) {
+        const tooltip = document.getElementById('tooltip');
+        if (e.target.classList.contains('day-cell') && e.target.dataset.date && !e.target.classList.contains('future-disabled')) {
+            const dateStr = e.target.dataset.date;
+            const entry = this.entriesCache[dateStr];
+
+            if (entry) {
+                const d = new Date(dateStr.split('-')[0], dateStr.split('-')[1] - 1, dateStr.split('-')[2]);
+                document.getElementById('ttDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                document.getElementById('ttMood').innerText = '★'.repeat(entry.mood);
+                document.getElementById('ttText').innerText = entry.text || 'No text note';
+
+                const thumbs = document.getElementById('ttThumbs'); thumbs.innerHTML = '';
+                if (entry.media) entry.media.forEach(m => {
+                    const el = document.createElement(m.type === 'video' ? 'video' : 'img');
+                    el.src = m.src || m.dataUrl; el.className = 'tooltip-thumb';
+                    thumbs.appendChild(el);
+                });
+
+                tooltip.style.opacity = '1';
+                let x = e.pageX + 15, y = e.pageY + 15;
+                if (x + 340 > window.innerWidth) x = e.pageX - 335;
+                tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+                return;
+            }
+        }
+        tooltip.style.opacity = '0';
+    }
+};
+
+window.onload = () => App.init();
+</script>
+</body>
+</html>

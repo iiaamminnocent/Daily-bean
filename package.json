@@ -1,0 +1,19 @@
+{
+  "name": "dailybean",
+  "version": "1.0.0",
+  "description": "DailyBean Desktop Journal",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^30.0.0"
+  },
+  "allowScripts": {
+    "electron@30.5.1": true
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^8.0.1",
+    "electron-packager": "^17.1.2"
+  }
+}
